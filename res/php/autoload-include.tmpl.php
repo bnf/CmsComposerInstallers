@@ -1,5 +1,6 @@
 <?php
 if (!getenv('TYPO3_PATH_COMPOSER_ROOT')) {
+    // @deprecated will be removed in 3.0
     putenv('TYPO3_PATH_COMPOSER_ROOT=' . '{$base-dir}');
     $_ENV['TYPO3_PATH_COMPOSER_ROOT'] = '{$base-dir}';
 }
