@@ -40,11 +40,11 @@ class ExtensionInstaller extends LibraryInstaller
     public function __construct(
         IOInterface $io,
         Composer $composer,
-        Config $pluginConfig = null
+        Config $pluginConfig
     ) {
         parent::__construct($io, $composer);
 
-        $pluginConfig = $pluginConfig ?: Config::load($composer);
+        $pluginConfig = $pluginConfig;
         $rootDirectory = $this->filesystem->normalizePath($pluginConfig->get('root-dir'));
         $this->extensionDir = $rootDirectory . '/typo3conf/ext';
         $this->systemExtensionDir = $rootDirectory . '/typo3/sysext';
