@@ -48,15 +48,17 @@ class IncludeFile
     /**
      * IncludeFile constructor.
      *
+     * @param IOInterface $io
+     * @param Composer $composer
      * @param TokenInterface[] $tokens
      * @param Filesystem $filesystem
      */
-    public function __construct(IOInterface $io, Composer $composer, array $tokens, Filesystem $filesystem = null)
+    public function __construct(IOInterface $io, Composer $composer, array $tokens, Filesystem $filesystem)
     {
         $this->io = $io;
         $this->composer = $composer;
         $this->tokens = $tokens;
-        $this->filesystem = $this->filesystem ?: new Filesystem();
+        $this->filesystem = $filesystem;
     }
 
     public function register()

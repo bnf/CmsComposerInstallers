@@ -53,11 +53,11 @@ class BaseDirToken implements TokenInterface
      * @param Typo3PluginConfig $typo3PluginConfig
      * @param Filesystem $filesystem
      */
-    public function __construct(IOInterface $io, Typo3PluginConfig $typo3PluginConfig, Filesystem $filesystem = null)
+    public function __construct(IOInterface $io, Typo3PluginConfig $typo3PluginConfig, Filesystem $filesystem)
     {
         $this->io = $io;
         $this->typo3PluginConfig = $typo3PluginConfig;
-        $this->filesystem = $filesystem ?: new Filesystem();
+        $this->filesystem = $filesystem;
     }
 
     /**

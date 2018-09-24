@@ -20,7 +20,7 @@ namespace TYPO3\CMS\Composer\Plugin;
 
 use Composer\Composer;
 use Composer\Script\Event;
-use TYPO3\CMS\Composer\Plugin\Config as PluginConfig;
+use TYPO3\CMS\Composer\Plugin\Config;
 use TYPO3\CMS\Composer\Plugin\Core\IncludeFile;
 use TYPO3\CMS\Composer\Plugin\Core\IncludeFile\AppDirToken;
 use TYPO3\CMS\Composer\Plugin\Core\IncludeFile\BaseDirToken;
@@ -29,6 +29,7 @@ use TYPO3\CMS\Composer\Plugin\Core\IncludeFile\RootDirToken;
 use TYPO3\CMS\Composer\Plugin\Core\IncludeFile\WebDirToken;
 use TYPO3\CMS\Composer\Plugin\Core\ScriptDispatcher;
 use TYPO3\CMS\Composer\Plugin\Util\Filesystem;
+
 
 /**
  * Implementation of the Plugin to make further changes more robust on Composer updates
@@ -50,35 +51,29 @@ class PluginImplementation
      */
     private $composer;
 
+    private $tokens = [
+        BaseDirToken::class,
+        AppDirToken::class,
+        WebDirToken::class,
+        RootDirToken::class,
+        ComposerModeToken::class,
+    ];
+
     /**
      * @param Event $event
-     * @param ScriptDispatcher $scriptDispatcher
-     * @param IncludeFile $includeFile
      */
-    public function __construct(
-        Event $event,
-        ScriptDispatcher $scriptDispatcher = null,
-        IncludeFile $includeFile = null
-    ) {
+    public function __construct(Event $event)
+    {
         $io = $event->getIO();
         $this->composer = $event->getComposer();
-        $fileSystem = new Filesystem();
-        $pluginConfig = PluginConfig::load($this->composer);
-
-        $this->scriptDispatcher = $scriptDispatcher ?: new ScriptDispatcher($event);
-        $this->includeFile = $includeFile
-            ?: new IncludeFile(
-                $io,
-                $this->composer,
-                [
-                    new BaseDirToken($io, $pluginConfig),
-                    new AppDirToken($io, $pluginConfig),
-                    new WebDirToken($io, $pluginConfig),
-                    new RootDirToken($io, $pluginConfig),
-                    new ComposerModeToken($io, $pluginConfig),
-                ],
-                $fileSystem
-            );
+        $filesystem = new Filesystem();
+        $config = Config::load($this->composer);
+        $this->scriptDispatcher = new ScriptDispatcher($event);
+        $tokens = [];
+        foreach ($this->tokens as $token) {
+            $tokens[] = new $token($io, $config, $filesystem);
+        }
+        $this->includeFile = new IncludeFile($io, $this->composer, $tokens, $filesystem);
     }
 
     public function preAutoloadDump()
