@@ -15,6 +15,8 @@ namespace TYPO3\CMS\Composer\Plugin;
  */
 
 use Composer\Composer;
+use Composer\Config as ComposerConfig;
+use ReflectionClass;
 
 /**
  * Configuration wrapper to easily access extra configuration for installer
@@ -48,7 +50,7 @@ class Config
     /**
      * @param string $baseDir
      */
-    public function __construct($baseDir = null)
+    public function __construct(string $baseDir)
     {
         $this->baseDir = $baseDir;
         // load defaults
@@ -206,12 +208,12 @@ class Config
     }
 
     /**
-     * @param \Composer\Config $config
-     * @return mixed
+     * @param ComposerConfig $config
+     * @return string
      */
-    protected static function extractBaseDir(\Composer\Config $config)
+    protected static function extractBaseDir(ComposerConfig $config): string
     {
-        $reflectionClass = new \ReflectionClass($config);
+        $reflectionClass = new ReflectionClass($config);
         $reflectionProperty = $reflectionClass->getProperty('baseDir');
         $reflectionProperty->setAccessible(true);
         return $reflectionProperty->getValue($config);
