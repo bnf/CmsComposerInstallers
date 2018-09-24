@@ -23,7 +23,8 @@ use Composer\Package\PackageInterface;
 class ExtensionKeyResolver
 {
     /**
-     * Resolves the extension key from replaces or package name
+     * Resolves a packages extension key from configuration settings
+     * in extra, or replaces, or alternatively from the package name.
      *
      * @param PackageInterface $package
      * @throws \RuntimeException
@@ -34,23 +35,24 @@ class ExtensionKeyResolver
         if (strpos($package->getType(), 'typo3-cms-') === false) {
             throw new \RuntimeException(sprintf('Tried to resolve an extension key from non extension package "%s"', $package->getName()), 1501195043);
         }
+
+        $extra = $package->getExtra();
+
+        if (!empty($extra['typo3/cms']['extension-key'])) {
+            return $extra['typo3/cms']['extension-key'];
+        }
+
+        if (!empty($extra['installer-name'])) {
+            return $extra['installer-name'];
+        }
+
         foreach ($package->getReplaces() as $packageName => $version) {
             if (strpos($packageName, '/') === false) {
-                $extensionKey = trim($packageName);
-                break;
+                return trim($packageName);
             }
         }
-        if (empty($extensionKey)) {
-            list(, $extensionKey) = explode('/', $package->getName(), 2);
-            $extensionKey = str_replace('-', '_', $extensionKey);
-        }
-        $extra = $package->getExtra();
-        if (!empty($extra['installer-name'])) {
-            $extensionKey = $extra['installer-name'];
-        }
-        if (!empty($extra['typo3/cms']['extension-key'])) {
-            $extensionKey = $extra['typo3/cms']['extension-key'];
-        }
-        return $extensionKey;
+
+        list(, $extensionKey) = explode('/', $package->getName(), 2);
+        return str_replace('-', '_', $extensionKey);
     }
 }
