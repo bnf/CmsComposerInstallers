@@ -41,7 +41,7 @@ class RootDirToken implements TokenInterface
     private $io;
 
     /**
-     * WebDirToken constructor.
+     * RootDirToken constructor.
      *
      * @param IOInterface $io
      * @param Typo3PluginConfig $typo3PluginConfig

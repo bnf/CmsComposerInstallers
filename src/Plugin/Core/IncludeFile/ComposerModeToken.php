@@ -37,7 +37,7 @@ class ComposerModeToken implements TokenInterface
     private $pluginConfig;
 
     /**
-     * WebDirToken constructor.
+     * ComposerModeToken constructor.
      *
      * @param IOInterface $io
      * @param PluginConfig $pluginConfig

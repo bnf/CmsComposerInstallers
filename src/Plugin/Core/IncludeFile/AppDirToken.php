@@ -44,7 +44,7 @@ class AppDirToken implements TokenInterface
     private $io;
 
     /**
-     * BaseDirToken constructor.
+     * AppDirToken constructor.
      *
      * @param IOInterface $io
      * @param Typo3PluginConfig $typo3PluginConfig
