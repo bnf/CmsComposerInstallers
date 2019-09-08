@@ -116,4 +116,9 @@ class ScriptDispatcher
     {
         $this->loader->unregister();
     }
+
+    public function getLoader()
+    {
+        return $this->loader;
+    }
 }
