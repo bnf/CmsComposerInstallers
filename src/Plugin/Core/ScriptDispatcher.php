@@ -92,7 +92,7 @@ class ScriptDispatcher
         $packageMap = $generator->buildPackageMap($composer->getInstallationManager(), $package, $packages);
         $map = $generator->parseAutoloads($packageMap, $package);
         $this->loader = $generator->createLoader($map);
-        $this->loader->register();
+        $this->loader->register(true);
         if (!empty($map['psr-4']) && is_array($map['psr-4'])) {
             $this->registerInstallerScripts(array_keys($map['psr-4']));
         }
